@@ -46,5 +46,5 @@ Reference: https://www.kaggle.com/competitions/playground-series-s6e5/discussion
 
 
 ## version管理
-baseline
-ver6:基于 orig 真实数据的历史进站率聚合特征。理由是visual结果里 hist_pit_next_rate、driver_race_year_pit_next_rate、compound_pit_next_rate这一类最强；guide里也把hist_pit_next_rate排在最强预测器第一位，但提醒会有 NaN，所以这里做了层级 fallback 填充。
+- baseline
+- ver6:基于 orig 真实数据的历史进站率聚合特征。理由是visual结果里 hist_pit_next_rate、driver_race_year_pit_next_rate、compound_pit_next_rate这一类最强；guide里也把hist_pit_next_rate排在最强预测器第一位，但提醒会有 NaN，所以这里做了层级 fallback 填充。
