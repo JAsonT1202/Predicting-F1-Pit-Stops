@@ -51,4 +51,4 @@ Reference: https://www.kaggle.com/competitions/playground-series-s6e5/discussion
 |---|---|---:|
 | baseline | 原始 baseline | 0.95355 |
 | ver6 | 基于 `orig` 真实数据新增历史进站率聚合特征。理由是 visual 结果中 `hist_pit_next_rate`、`driver_race_year_pit_next_rate`、`compound_pit_next_rate` 等特征较强；guide 中也将 `hist_pit_next_rate` 作为最强预测器之一。但由于该类特征存在 NaN，因此加入了层级 fallback 填充。 | 0.95199 |
-| ver7 | 在 baseline 基础上新增低泄漏风险的当前状态交互特征，不使用 `PitNextLap` 统计类特征，主要基于轮胎状态、比赛进度、衰减速度、位置变化和 Compound 交互构造特征。 |  |
+| ver7 | 在 baseline 基础上新增低泄漏风险的当前状态交互特征，不使用 `PitNextLap` 统计类特征，主要基于轮胎状态、比赛进度、衰减速度、位置变化和 Compound 交互构造特征。 | 0.95339 |
