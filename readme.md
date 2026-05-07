@@ -47,7 +47,8 @@ Reference: https://www.kaggle.com/competitions/playground-series-s6e5/discussion
 
 ## Version 管理
 
-| Version | 修改内容 | 分数 |
-|---|---|---:|
-| baseline | 原始 baseline | 0.95355 |
-| ver6 | 基于 `orig` 真实数据新增历史进站率聚合特征。理由是 visual 结果中 `hist_pit_next_rate`、`driver_race_year_pit_next_rate`、`compound_pit_next_rate` 等特征较强；guide 中也将 `hist_pit_next_rate` 作为最强预测器之一。但由于该类特征存在 NaN，因此加入了层级 fallback 填充。 | 0.95199 |
+| Version | 修改内容 | OOF AUC | Public Score |
+|---|---|---:|---:|
+| baseline | 原始 baseline | 0.95368 | 0.95355 |
+| ver6 | 基于 `orig` 真实数据新增历史进站率聚合特征。理由是 visual 结果中 `hist_pit_next_rate`、`driver_race_year_pit_next_rate`、`compound_pit_next_rate` 等特征较强；guide 中也将 `hist_pit_next_rate` 作为最强预测器之一。但由于该类特征存在 NaN，因此加入了层级 fallback 填充。 | 0.95254 | 0.95199 |
+| ver12 | 在 baseline 的 `Race × Compound`、`Race × Year` TE 基础上，新增粗粒度 TE 组合：`Compound`、`Race`、`Year`、`Driver` 和 `Stint`。这些组合只作为 TargetEncoder 的类别输入列，实际 target encoding 在 K-Fold 训练过程中完成，以避免直接用全量 target mean 带来的泄漏。 | 0.95352 | 0.95343 |
