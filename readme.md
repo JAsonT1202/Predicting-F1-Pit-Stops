@@ -45,10 +45,21 @@ Reference: https://www.kaggle.com/competitions/playground-series-s6e5/discussion
 Reference: https://www.kaggle.com/competitions/playground-series-s6e5/discussion/696380
 
 
+## TE 的分类
+
+| TE 类型 | 组合方式 | 代表特征 | 特点 | 当前判断 |
+|---|---|---|---|---|
+| Baseline TE | 原 baseline 已包含的中粒度 TE | `Race × Compound`, `Race × Year` | 有明确业务含义，且已在 baseline 中验证有效 | 保留 |
+| Coarse Stable TE | 单字段 TE，且 train/test 覆盖稳定 | `Compound`, `Race`, `Year`, `Stint`, `Position`, `PitStop` | 样本数充足，泄漏风险较低，但可能与原始特征重复 | 可单独测试 |
+| Coarse High-card TE | 单字段 TE，但类别数量较多 | `Driver` | 虽是单字段，但 group 较稀疏，容易引入噪声 | 谨慎使用 |
+| Mid Stable TE | 双字段 TE，不含 Driver，覆盖较稳定 | `Stint × Compound`, `Race × Stint`, `Year × Stint`, `Year × Compound` | 比 coarse 更有策略含义，且稀疏风险可控 | 下一阶段优先测试 |
+| Fine Stable TE | 三字段 TE，但统计上仍较稳定 | `Race × Year × Compound` | 粒度更细，但覆盖率仍较好 | 后续单独 ablation |
+| High-risk TE | Driver 相关或过细组合 | `Driver × Race`, `Driver × Compound`, `Driver × Race × Compound` | 组合稀疏，容易过拟合 | 暂不优先 |
+
 ## Version 管理
 
 | Version | 修改内容 | OOF AUC | Public Score |
 |---|---|---:|---:|
-| baseline | 原始 baseline | 0.95368 | 0.95355 |
-| ver6 | 基于 `orig` 真实数据新增历史进站率聚合特征。理由是 visual 结果中 `hist_pit_next_rate`、`driver_race_year_pit_next_rate`、`compound_pit_next_rate` 等特征较强；guide 中也将 `hist_pit_next_rate` 作为最强预测器之一。但由于该类特征存在 NaN，因此加入了层级 fallback 填充。 | 0.95254 | 0.95199 |
-| ver12 | 在 baseline 的 `Race × Compound`、`Race × Year` TE 基础上，新增粗粒度 TE 组合：`Compound`、`Race`、`Year`、`Driver` 和 `Stint`。这些组合只作为 TargetEncoder 的类别输入列，实际 target encoding 在 K-Fold 训练过程中完成，以避免直接用全量 target mean 带来的泄漏。 | 0.95352 | 0.95343 |
+| baseline | 原始 baseline。包含原始特征、基础 categorical/count/bin 特征，以及 baseline 已验证有效的中粒度 TE：`Race × Compound` 和 `Race × Year`。 | 0.95368 | 0.95355 |
+| ver6 | `orig` 真实数据历史统计 TE / 细粒度 target-rate 扩展。新增 `hist_pit_next_rate`、`driver_race_year_pit_next_rate`、`compound_pit_next_rate` 等历史进站率聚合特征，并使用层级 fallback 处理 NaN。该版本属于 external/orig-based historical TE，粒度偏细，结果 OOF 和 Public 均明显下降。 | 0.95254 | 0.95199 |
+| ver12 | baseline TE + coarse TE 扩展。在 baseline 的 `Race × Compound`、`Race × Year` 基础上，新增粗粒度 TE：`Compound`、`Race`、`Year`、`Driver`、`Stint`。这些组合只作为 TargetEncoder 的类别输入列，实际编码在 K-Fold 训练过程中完成。结果低于 baseline，说明这组 coarse TE 整体没有带来额外收益，其中 `Driver` 可能引入 high-card 噪声。 | 0.95352 | 0.95343 |
