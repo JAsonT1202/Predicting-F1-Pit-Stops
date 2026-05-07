@@ -51,7 +51,3 @@ Reference: https://www.kaggle.com/competitions/playground-series-s6e5/discussion
 |---|---|---:|
 | baseline | 原始 baseline | 0.95355 |
 | ver6 | 基于 `orig` 真实数据新增历史进站率聚合特征。理由是 visual 结果中 `hist_pit_next_rate`、`driver_race_year_pit_next_rate`、`compound_pit_next_rate` 等特征较强；guide 中也将 `hist_pit_next_rate` 作为最强预测器之一。但由于该类特征存在 NaN，因此加入了层级 fallback 填充。 | 0.95199 |
-| ver7 | 在 baseline 基础上新增低泄漏风险的当前状态交互特征，不使用 `PitNextLap` 统计类特征，主要基于轮胎状态、比赛进度、衰减速度、位置变化和 Compound 交互构造特征。 | 0.95339 |
-| ver8 | 在 baseline 基础上扩展类别交互编码组合，新增 `Driver × Compound` 和 `Driver × Race`。不新增 row-wise 数值特征，主要沿用 baseline 中的 categorical interaction + TargetEncoder 思路，验证驾驶员与轮胎、驾驶员与赛道组合是否能捕捉更稳定的策略差异。 | 0.95182|
-| ver9 | 在 baseline 基础上新增少量核心数值变换特征，包括 `LapTime_Delta_abs`、`TyreLife_sq`、`Stint_x_TyreLife`、`PitStop_x_TyreLife`、`PitStop_x_Stint` 和简单的 `Compound_simple_enc`。由于 ver6/ver8 中历史统计和类别交互均明显变差，本版本不再扩展 Driver/Race 历史类特征，而是聚焦于讨论区和 visual 分析中更稳定的核心信号：Stint、TyreLife、LapTime_Delta、PitStop 和 Compound。 | 待提交 |
-| ver10 | 在 baseline 基础上仅保留 ver9 中最核心的两个数值变换特征：`LapTime_Delta_abs` 和 `TyreLife_sq`。由于 ver9 几乎追平 baseline，但未超过 baseline，说明完整特征组中可能存在部分噪音特征，因此本版本进行反向消融，去除 PitStop/Stint/Compound 交互项，只验证圈速波动幅度和轮胎寿命平方项是否能带来更稳定提升。 | 0.95353 |
